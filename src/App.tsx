@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
-import TaskModel from "./models/TaskModel";
+import TaskModel, { FetchedTask } from "./models/TaskModel";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +21,9 @@ function App() {
         throw new Error("Request failed!");
       }
 
-      const data = await response.json();
+      const data: FetchedTask = await response.json();
 
-      const loadedTasks = [];
+      const loadedTasks: TaskModel[] = [];
 
       for (const taskKey in data) {
         loadedTasks.push({ id: taskKey, text: data[taskKey].text });
@@ -41,7 +41,10 @@ function App() {
   }, []);
 
   const taskAddHandler = (task: TaskModel) => {
-    setTasks((prevTasks) => prevTasks.concat(task));
+    setTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks, task];
+      return updatedTasks;
+    });
   };
 
   return (

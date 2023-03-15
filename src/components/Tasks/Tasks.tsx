@@ -1,4 +1,3 @@
-import React, { MouseEventHandler } from "react";
 import TaskModel from "../../models/TaskModel";
 import Section from "../UI/Section";
 import TaskItem from "./TaskItem";
