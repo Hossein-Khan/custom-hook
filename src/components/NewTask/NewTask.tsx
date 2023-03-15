@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useHttp, { httpMethod } from "../../hooks/use-http";
 import TaskModel from "../../models/TaskModel";
 import Section from "../UI/Section";
 
@@ -9,39 +10,29 @@ type NewTaskProps = {
 };
 
 const NewTask = function (props: NewTaskProps): JSX.Element {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const addNewTask = function (taskText: string, data: any) {
+    console.log(data);
+    console.log(Object.values(data)[0]);
+    const generatedId = data.name;
+    const createdTask = { id: generatedId, text: taskText };
 
-  const enterTaskHandler = async (taskText: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        "https://react-http-4ee6a-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-        {
-          method: "POST",
-          body: JSON.stringify({ text: taskText }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Request failed!");
-      }
-
-      const data = await response.json();
-
-      const generatedId = data.name; // firebase-specific => "name" contains generated id
-      const createdTask = { id: generatedId, text: taskText };
-
-      props.onAddTask(createdTask);
-    } catch (err) {
-      setError((err as Error).message || "Something went wrong!");
-    }
-    setIsLoading(false);
+    props.onAddTask(createdTask);
   };
+  const {
+    isLoading,
+    error,
+    sendRequest: sendTaskHandler,
+  } = useHttp(
+    {
+      url: "https://react-http-4ee6a-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+      method: httpMethod.POST,
+      body: { text: "taskText" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+    addNewTask.bind(null, taskText)
+  );
 
   return (
     <Section>
