@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useRef } from "react";
+import { FormEventHandler, useRef } from "react";
 
 import styles from "./TaskForm.module.css";
 

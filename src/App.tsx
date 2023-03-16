@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
-import TaskModel, { FetchedTask } from "./models/TaskModel";
+import TaskModel from "./models/TaskModel";
 import useHttp from "./hooks/use-http";
 
 function App() {
   const [tasks, setTasks] = useState<TaskModel[]>([]);
 
-  const transformTasks = function (tasksObj: any) {
+  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
+
+  const transformTasks = useCallback(function (tasksObj: any) {
     const loadedTasks: TaskModel[] = [];
 
     for (const taskKey in tasksObj) {
@@ -16,19 +18,15 @@ function App() {
     }
 
     setTasks(loadedTasks);
-  };
-
-  const httpData = useHttp(
-    {
-      url: "https://react-http-4ee6a-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-    },
-    transformTasks
-  );
-
-  const { isLoading, error, sendRequest: fetchTasks } = httpData;
+  }, []);
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(
+      {
+        url: "https://react-http-4ee6a-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+      },
+      transformTasks
+    );
   }, []);
 
   const taskAddHandler = (task: TaskModel) => {
@@ -45,7 +43,13 @@ function App() {
         items={tasks}
         loading={isLoading}
         error={error}
-        onFetch={fetchTasks}
+        onFetch={fetchTasks.bind(
+          null,
+          {
+            url: "https://react-http-4ee6a-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+          },
+          transformTasks
+        )}
       />
     </React.Fragment>
   );

@@ -1,5 +1,4 @@
-import { OutgoingHttpHeader, OutgoingHttpHeaders } from "http";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export enum httpMethod {
   GET = "GET",
@@ -15,11 +14,14 @@ export interface requestConfig {
   body?: { [key: string]: string };
 }
 
-const useHttp = function (rc: requestConfig, applyData: (data: any) => void) {
+const useHttp = function () {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendRequest = async () => {
+  const sendRequest = async (
+    rc: requestConfig,
+    applyData: (data: any) => void
+  ) => {
     setIsLoading(true);
     setError(null);
     try {

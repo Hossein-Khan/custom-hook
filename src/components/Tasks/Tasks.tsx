@@ -1,3 +1,4 @@
+import { requestConfig } from "../../hooks/use-http";
 import TaskModel from "../../models/TaskModel";
 import Section from "../UI/Section";
 import TaskItem from "./TaskItem";
@@ -8,7 +9,7 @@ type TasksProps = {
   items: TaskModel[];
   loading: boolean;
   error: string | null;
-  onFetch: () => Promise<void>;
+  onFetch: () => void;
 };
 
 const Tasks = function (props: TasksProps): JSX.Element {
