@@ -9,7 +9,7 @@ type TasksProps = {
   items: TaskModel[];
   loading: boolean;
   error: string | null;
-  onFetch: () => void;
+  onFetch: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const Tasks = function (props: TasksProps): JSX.Element {
@@ -28,7 +28,7 @@ const Tasks = function (props: TasksProps): JSX.Element {
   let content = taskList;
 
   if (props.error) {
-    content = <button onClick={props.onFetch}>Try again</button>;
+    content = <button onClick={props.onFetch.bind}>Try again</button>;
   }
 
   if (props.loading) {
