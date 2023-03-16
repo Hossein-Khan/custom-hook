@@ -27,7 +27,7 @@ function App() {
       },
       transformTasks
     );
-  }, [fetchTasks]);
+  }, [fetchTasks, transformTasks]);
 
   const taskAddHandler = (task: TaskModel) => {
     setTasks((prevTasks) => {
